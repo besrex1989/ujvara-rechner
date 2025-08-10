@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="de">
 <head>
@@ -73,10 +72,13 @@
     <h2>Verkaufswert-Rechner</h2>
 
     <label for="brutto">Jährliche Brutto-Einnahmen (CHF)</label>
-    <input type="number" id="brutto" placeholder="z. B. 120000" />
+    <input type="number" id="brutto" placeholder="z. B. 120000" />
+
+    <label for="gemeinde">Gemeinde</label>
+    <input type="text" id="gemeinde" placeholder="z. B. Zürich" />
 
     <label for="einschaetzung">Was denken Sie, ist Ihre Liegenschaft wert? (CHF)</label>
-    <input type="number" id="einschaetzung" placeholder="z. B. 2400000" />
+    <input type="number" id="einschaetzung" placeholder="z. B. 2400000" />
 
     <button onclick="berechnePreis()">Berechnen</button>
 
@@ -85,31 +87,44 @@
       <p><strong>Geschätzter Marktwert:</strong> <span id="preis"></span> CHF</p>
       <p><strong>Ihre Einschätzung:</strong> <span id="userWert"></span> CHF</p>
       <p id="vergleich"></p>
+      <p><strong>Einwohnerzahl:</strong> <span id="einwohner"></span></p>
       <p><strong>Interessierte Käufer:</strong> <span id="kaeufer"></span> potenzielle Investoren</p>
     </div>
 
     <div id="cta" class="cta" style="display:none;">
       <p><strong>Interessiert an einer professionellen Einschätzung?</strong></p>
-      <p>Wir kontaktieren Sie nur, wenn Sie das wünschen – 100 % diskret und unverbindlich.</p>
+      <p>Wir kontaktieren Sie nur, wenn Sie das wünschen – 100% diskret und unverbindlich.</p>
       <button onclick="alert('Vielen Dank! Wir melden uns zeitnah bei Ihnen.')">📩 Kontakt aufnehmen</button>
     </div>
   </div>
 
   <script>
+    const gemeinden = {
+      'Zürich': 434008,
+      'Bern': 133115,
+      'Basel': 178985,
+      'Genf': 203856,
+      'Lausanne': 140000
+    };
+
     function berechnePreis() {
       const brutto = parseFloat(document.getElementById('brutto').value);
-      const einschätzung = parseFloat(document.getElementById('einschaetzung').value);
+      const einschaetzung = parseFloat(document.getElementById('einschaetzung').value);
+      const gemeinde = document.getElementById('gemeinde').value.trim();
       const kapitalisierungszins = 5;
       const preis = brutto / (kapitalisierungszins / 100);
 
       document.getElementById('preis').textContent = preis.toLocaleString('de-CH', { style: 'currency', currency: 'CHF' });
-      document.getElementById('userWert').textContent = einschätzung.toLocaleString('de-CH', { style: 'currency', currency: 'CHF' });
+      document.getElementById('userWert').textContent = einschaetzung.toLocaleString('de-CH', { style: 'currency', currency: 'CHF' });
 
-      const differenz = Math.abs(preis - einschätzung);
-      const vergleich = preis > einschätzung
+      const differenz = Math.abs(preis - einschaetzung);
+      const vergleich = preis > einschaetzung
         ? `💡 Ihre Einschätzung liegt ${differenz.toLocaleString('de-CH')} CHF unter dem Marktwert.`
         : `💡 Ihre Einschätzung liegt ${differenz.toLocaleString('de-CH')} CHF über dem Marktwert.`;
       document.getElementById('vergleich').textContent = vergleich;
+
+      const einwohner = gemeinden[gemeinde];
+      document.getElementById('einwohner').textContent = einwohner ? einwohner.toLocaleString('de-CH') : 'unbekannt';
 
       document.getElementById('kaeufer').textContent = Math.floor(Math.random() * 9) + 2;
 
